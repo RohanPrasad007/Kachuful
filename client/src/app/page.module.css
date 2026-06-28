@@ -1,0 +1,27 @@
+.input {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--surface);
+  border: 1px solid var(--outline-variant);
+  border-radius: 8px;
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(255, 184, 0, 0.2);
+}
+
+.input::placeholder {
+  color: var(--on-surface-variant);
+  opacity: 0.5;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
