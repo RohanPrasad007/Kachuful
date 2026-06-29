@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface Player {
   name: string;
@@ -15,13 +15,31 @@ interface LobbyViewProps {
 }
 
 export const LobbyView: React.FC<LobbyViewProps> = ({ roomCode, players, hostName, isHost, onStartGame }) => {
+  const [isCopied, setIsCopied] = useState(false);
   const canStart = players.length >= 3;
+
+  const handleCopyLink = () => {
+    const inviteLink = `${window.location.origin}/?room=${roomCode}`;
+    navigator.clipboard.writeText(inviteLink);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '40px' }}>
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
         <p style={{ color: 'var(--on-surface-variant)', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Room Code</p>
-        <h1 style={{ fontSize: '4rem', color: 'var(--primary)', letterSpacing: '0.2em' }}>{roomCode}</h1>
+        <h1 style={{ fontSize: '4rem', color: 'var(--primary)', letterSpacing: '0.2em', marginBottom: '16px' }}>{roomCode}</h1>
+        <button 
+          className="btn-secondary" 
+          onClick={handleCopyLink}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>
+            {isCopied ? 'check' : 'content_copy'}
+          </span>
+          {isCopied ? 'Copied!' : 'Copy Invite Link'}
+        </button>
         <p style={{ color: 'var(--on-surface-variant)' }}>Share this code with your friends to join.</p>
       </div>
 

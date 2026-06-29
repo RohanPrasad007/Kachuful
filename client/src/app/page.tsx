@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSocket } from '../context/SocketContext';
 import styles from './page.module.css';
@@ -12,6 +12,14 @@ export default function Home() {
   const [roomCode, setRoomCode] = useState('');
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const roomParam = params.get('room');
+    if (roomParam) {
+      setRoomCode(roomParam);
+    }
+  }, []);
 
   const handleCreateRoom = (e: React.FormEvent) => {
     e.preventDefault();

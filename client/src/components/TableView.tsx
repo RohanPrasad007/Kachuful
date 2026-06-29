@@ -60,7 +60,7 @@ export const TableView: React.FC<TableViewProps> = ({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', backgroundColor: 'var(--surface-container)', padding: '8px 16px', borderRadius: '999px', border: '1px solid var(--outline-variant)' }}>
           <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.8rem', textTransform: 'uppercase' }}>Trump</span>
-          <span className="material-symbols-outlined" style={{ color: getSuitColor(trumpSuit), fontVariationSettings: "'FILL' 1" }}>
+          <span style={{ color: getSuitColor(trumpSuit) }}>
             {getSuitIcon(trumpSuit)}
           </span>
         </div>

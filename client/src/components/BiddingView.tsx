@@ -39,11 +39,11 @@ export const BiddingView: React.FC<BiddingViewProps> = ({
 
   const getSuitIcon = (suit: string) => {
     switch (suit) {
-      case 'hearts': return 'favorite';
-      case 'diamonds': return 'diamond';
-      case 'clubs': return 'poker_chip';
-      case 'spades': return 'padel';
-      default: return 'favorite';
+      case 'hearts': return '♥';
+      case 'diamonds': return '♦';
+      case 'clubs': return '♣';
+      case 'spades': return '♠';
+      default: return '♥';
     }
   };
 
@@ -65,8 +65,8 @@ export const BiddingView: React.FC<BiddingViewProps> = ({
       {/* Header info */}
       <section className="responsive-grid-2">
         <div style={{ backgroundColor: 'var(--surface-container)', padding: '16px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid var(--outline-variant)' }}>
-          <div style={{ width: '80px', height: '80px', backgroundColor: 'var(--error-container)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '3rem', color: getSuitColor(trumpSuit), fontVariationSettings: "'FILL' 1" }}>
+          <div style={{ width: '80px', height: '80px', backgroundColor: (trumpSuit === 'hearts' || trumpSuit === 'diamonds') ? 'var(--error-container)' : 'var(--surface-variant)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: '3rem', color: getSuitColor(trumpSuit) }}>
               {getSuitIcon(trumpSuit)}
             </span>
           </div>
