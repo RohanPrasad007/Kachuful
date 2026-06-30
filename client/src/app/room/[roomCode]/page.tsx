@@ -54,6 +54,8 @@ export default function RoomPage() {
   // Final
   const [winningSeats, setWinningSeats] = useState<number[]>([]);
 
+  const [isScoreboardOpen, setIsScoreboardOpen] = useState(false);
+
   useEffect(() => {
     if (!socket || !isConnected) return;
 
@@ -133,7 +135,7 @@ export default function RoomPage() {
       setBids(data.bids);
       setTricksWon(data.tricksWonPerPlayer);
       setRoundScores(data.scoresThisRound);
-      setRunningTotals(data.runningTotals);
+      setRunningTotals({ ...data.runningTotals });
       setGameState('round_summary');
     });
 
@@ -178,6 +180,38 @@ export default function RoomPage() {
     socket?.emit('card:play', { roomCode, cardId });
   };
 
+  // Helper to calculate rankings and standings list
+  const getStandings = () => {
+    const standingsList = players.map(p => {
+      const score = runningTotals[p.seat] || 0;
+      return {
+        name: p.name,
+        seat: p.seat,
+        score
+      };
+    });
+
+    // Sort descending by score
+    standingsList.sort((a, b) => b.score - a.score);
+
+    // Calculate ranks handling ties
+    let currentRank = 1;
+    return standingsList.map((item, index) => {
+      if (index > 0 && item.score < standingsList[index - 1]!.score) {
+        currentRank = index + 1;
+      }
+      return {
+        ...item,
+        rank: currentRank
+      };
+    });
+  };
+
+  const standings = getStandings();
+  const myStanding = standings.find(item => item.seat === mySeat);
+  const myScore = myStanding ? myStanding.score : 0;
+  const myRank = myStanding ? myStanding.rank : 1;
+
   const isHost = myName === hostName;
 
   if (!isConnected) {
@@ -189,7 +223,17 @@ export default function RoomPage() {
   }
 
   return (
-    <div className="page-container">
+    <div className={`page-container${gameState === 'bidding' || gameState === 'playing' ? ' game-active' : ''}`}>
+      {/* Floating Pill Badge */}
+      {(gameState === 'bidding' || gameState === 'playing') && mySeat !== -1 && (
+        <div className="score-rank-pill" onClick={() => setIsScoreboardOpen(true)}>
+          <span className="material-symbols-outlined">leaderboard</span>
+          <span>Score: {myScore}</span>
+          <span className="pill-divider" />
+          <span>Rank: #{myRank}</span>
+        </div>
+      )}
+
       {gameState === 'lobby' && (
         <LobbyView 
           roomCode={roomCode} 
@@ -250,6 +294,47 @@ export default function RoomPage() {
           finalTotals={runningTotals}
           winningSeats={winningSeats}
         />
+      )}
+
+
+      {/* Standings Modal Overlay */}
+      {isScoreboardOpen && (
+        <div className="scoreboard-modal-backdrop" onClick={() => setIsScoreboardOpen(false)}>
+          <div className="scoreboard-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="scoreboard-modal-close" onClick={() => setIsScoreboardOpen(false)}>
+              <span className="material-symbols-outlined">close</span>
+            </button>
+            <h2 style={{ fontFamily: 'var(--font-suit-display)', color: 'var(--primary)', marginBottom: '16px', fontSize: '1.8rem', textAlign: 'center' }}>
+              Current Standings
+            </h2>
+            <table className="standings-table">
+              <thead>
+                <tr style={{ color: 'var(--on-surface-variant)', fontSize: '0.9rem', borderBottom: '1px solid var(--outline-variant)' }}>
+                  <th style={{ padding: '8px 16px', textAlign: 'left' }}>Rank</th>
+                  <th style={{ padding: '8px 16px', textAlign: 'left' }}>Player</th>
+                  <th style={{ padding: '8px 16px', textAlign: 'right' }}>Total Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {standings.map(item => (
+                  <tr key={item.seat} className={`standings-row${item.seat === mySeat ? ' self' : ''}`}>
+                    <td style={{ padding: '8px 16px' }}>
+                      <span className={`standings-rank-badge rank-${item.rank}`}>
+                        {item.rank}
+                      </span>
+                    </td>
+                    <td style={{ padding: '8px 16px', fontWeight: item.seat === mySeat ? 'bold' : 'normal' }}>
+                      {item.name} {item.seat === mySeat && '(You)'}
+                    </td>
+                    <td style={{ padding: '8px 16px', textAlign: 'right', fontWeight: 'bold' }}>
+                      {item.score}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </div>
   );

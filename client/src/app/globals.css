@@ -212,6 +212,183 @@ button:disabled {
   gap: 24px;
 }
 
+
+/* Responsive Bidding Layout */
+.bidding-header-desktop {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+.bidding-header-mobile {
+  display: none;
+}
+
+.bidding-players-container {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.bidding-player-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 150px;
+  background-color: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: 16px;
+  padding: 16px;
+  position: relative;
+  transition: all 0.2s;
+}
+.bidding-player-card.is-me {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1.5px dashed var(--primary-container);
+}
+.bidding-player-card.active {
+  border: 2px solid var(--primary) !important;
+  box-shadow: 0 0 16px rgba(255, 184, 0, 0.45);
+  background-color: rgba(255, 184, 0, 0.08) !important;
+  animation: activePulse 2s infinite ease-in-out;
+}
+
+@keyframes activePulse {
+  0% {
+    box-shadow: 0 0 8px rgba(255, 184, 0, 0.25);
+    border-color: rgba(255, 184, 0, 0.8) !important;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 184, 0, 0.6);
+    border-color: rgba(255, 184, 0, 1) !important;
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(255, 184, 0, 0.25);
+    border-color: rgba(255, 184, 0, 0.8) !important;
+  }
+}
+
+
+.bidding-player-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+.bidding-player-name {
+  font-weight: bold;
+  margin-bottom: 8px;
+  text-align: center;
+}
+.bidding-player-badge {
+  background-color: var(--surface-variant);
+  padding: 4px 16px;
+  border-radius: 999px;
+  color: var(--primary);
+  font-weight: bold;
+}
+.bidding-player-status {
+  font-size: 0.8rem;
+  color: var(--on-surface-variant);
+}
+.bidding-player-active-label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 4px 8px;
+  background-color: var(--primary-container);
+  color: var(--on-primary-container);
+  font-size: 0.7rem;
+  font-weight: bold;
+  border-bottom-left-radius: 8px;
+  border-top-right-radius: 14px;
+}
+
+.bid-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  font-family: var(--font-suit-display);
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: transparent;
+  color: var(--on-surface);
+  border: 2px solid var(--outline-variant);
+}
+.bid-button.selected {
+  border: 2px solid var(--primary);
+  background-color: var(--primary);
+  color: var(--on-primary);
+}
+.bid-button.forbidden {
+  border: 2px solid rgba(255, 180, 171, 0.3);
+  background-color: rgba(147, 0, 10, 0.2);
+  color: rgba(255, 180, 171, 0.3);
+}
+
+/* Responsive Table Layout */
+.table-area-container {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+}
+.table-opponents {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.table-opponent-card {
+  background-color: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: 8px;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  transition: all 0.2s;
+}
+.table-opponent-card.active {
+  background-color: rgba(255, 184, 0, 0.1);
+  border: 2px solid var(--primary);
+}
+
+.trick-table-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(320px, 90vw);
+  height: min(320px, 90vw);
+  border-radius: 50%;
+  border: 1px dashed var(--outline-variant);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.played-card-wrapper {
+  position: absolute;
+  --radius: 80px;
+  transform: translate(calc(var(--radius) * var(--x)), calc(var(--radius) * var(--y))) rotate(calc(var(--rotation) * 1deg));
+  transition: all 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.played-card {
+  width: 60px;
+  height: 90px;
+  transform: scale(1);
+  margin: 0;
+  pointer-events: none;
+}
+
 /* Media Queries for Mobile Responsiveness */
 @media (max-width: 600px) {
   .page-container {
@@ -252,4 +429,290 @@ button:disabled {
     padding: 12px 24px;
     font-size: 1rem;
   }
+
+  .page-container.game-active {
+    padding: 12px 8px;
+  }
+
+  .bidding-header-desktop {
+    display: none;
+  }
+  .bidding-header-mobile {
+    display: block;
+  }
+
+  .bidding-players-container {
+    gap: 8px;
+  }
+  .bidding-player-card {
+    flex-direction: row;
+    width: auto;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    gap: 8px;
+  }
+  .bidding-player-avatar {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 0;
+    font-size: 0.7rem;
+  }
+  .bidding-player-name {
+    margin-bottom: 0;
+    text-align: left;
+  }
+  .bidding-player-badge {
+    padding: 2px 8px;
+    font-size: 0.8rem;
+  }
+  .bidding-player-status {
+    font-size: 0.75rem;
+  }
+  .bidding-player-active-label {
+    display: none;
+  }
+
+  .bid-button {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+
+  .table-area-container {
+    min-height: 180px;
+  }
+  .table-opponents {
+    gap: 8px;
+  }
+  .table-opponent-card {
+    padding: 6px 12px;
+    min-width: 80px;
+    font-size: 0.85rem;
+  }
+  .trick-table-area {
+    width: min(240px, 70vw);
+    height: min(240px, 70vw);
+  }
+  .played-card-wrapper {
+    --radius: 55px;
+  }
+  .played-card {
+    width: 52px;
+    height: 78px;
+  }
 }
+
+/* Floating Score & Rank Pill */
+.score-rank-pill {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(26, 21, 14, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 184, 0, 0.25);
+  color: var(--primary);
+  font-family: var(--font-suit-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+}
+
+.score-rank-pill:hover {
+  transform: translateY(-2px) scale(1.03);
+  background: rgba(255, 184, 0, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 6px 20px rgba(255, 184, 0, 0.15), 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.score-rank-pill:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.score-rank-pill .pill-divider {
+  width: 1px;
+  height: 14px;
+  background-color: rgba(255, 184, 0, 0.3);
+}
+
+.score-rank-pill .material-symbols-outlined {
+  font-size: 1.1rem;
+  color: var(--primary);
+  opacity: 0.8;
+  transition: transform 0.3s ease;
+}
+
+.score-rank-pill:hover .material-symbols-outlined {
+  transform: rotate(15deg);
+  opacity: 1;
+}
+
+/* Standings Modal Overlay */
+.scoreboard-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(10, 8, 5, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.scoreboard-modal-content {
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: 20px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+  padding: 24px;
+  position: relative;
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.scoreboard-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--outline-variant);
+  color: var(--on-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.scoreboard-modal-close:hover {
+  background: rgba(255, 180, 171, 0.1);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.standings-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  margin-top: 16px;
+}
+
+.standings-row {
+  transition: all 0.2s;
+}
+
+.standings-row td {
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.standings-row td:first-child {
+  border-left: 1px solid rgba(255, 255, 255, 0.03);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.standings-row td:last-child {
+  border-right: 1px solid rgba(255, 255, 255, 0.03);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.standings-row.self td {
+  background: rgba(255, 184, 0, 0.08);
+  border-color: rgba(255, 184, 0, 0.2);
+  color: var(--primary);
+}
+
+.standings-row.self td:first-child {
+  border-left: 2px solid var(--primary);
+}
+
+.standings-row.self td:last-child {
+  border-right: 1px solid rgba(255, 184, 0, 0.2);
+}
+
+.standings-rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.standings-rank-badge.rank-1 {
+  background: rgba(255, 184, 0, 0.2);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.standings-rank-badge.rank-2 {
+  background: rgba(255, 255, 255, 0.1);
+  color: #d1d5db;
+  border: 1px solid #9ca3af;
+}
+
+.standings-rank-badge.rank-3 {
+  background: rgba(205, 127, 50, 0.2);
+  color: #cd7f32;
+  border: 1px solid #cd7f32;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .score-rank-pill {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin: 0 0 12px auto;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    width: fit-content;
+    display: flex;
+  }
+  .score-rank-pill .material-symbols-outlined {
+    font-size: 0.95rem;
+  }
+}
+

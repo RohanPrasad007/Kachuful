@@ -60,10 +60,10 @@ export const BiddingView: React.FC<BiddingViewProps> = ({
   const bidOptions = Array.from({ length: cardsThisRound + 1 }, (_, i) => i);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', paddingBottom: '250px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', paddingBottom: '160px' }}>
       
-      {/* Header info */}
-      <section className="responsive-grid-2">
+      {/* Header Info */}
+      <section className="bidding-header-desktop">
         <div style={{ backgroundColor: 'var(--surface-container)', padding: '16px', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '16px', border: '1px solid var(--outline-variant)' }}>
           <div style={{ width: '80px', height: '80px', backgroundColor: (trumpSuit === 'hearts' || trumpSuit === 'diamonds') ? 'var(--error-container)' : 'var(--surface-variant)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ fontSize: '3rem', color: getSuitColor(trumpSuit) }}>
@@ -89,45 +89,62 @@ export const BiddingView: React.FC<BiddingViewProps> = ({
         </div>
       </section>
 
-      {/* Players Bids */}
-      <section style={{ display: 'flex', gap: '16px', overflowX: 'auto', paddingBottom: '16px' }}>
+      {/* Static Header Info (Mobile Only) */}
+      <section className="bidding-header-mobile">
+        {/* Compact bar - always visible */}
+        <div 
+          style={{ 
+            display: 'flex', justifyContent: 'center', alignItems: 'center',
+            backgroundColor: 'var(--surface-container)', padding: '10px 16px',
+            borderRadius: '12px', border: '1px solid var(--outline-variant)',
+            userSelect: 'none'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '1.4rem', color: getSuitColor(trumpSuit) }}>{getSuitIcon(trumpSuit)}</span>
+              <span style={{ textTransform: 'capitalize', color: 'var(--tertiary)', fontWeight: 'bold', fontSize: '1rem' }}>{trumpSuit}</span>
+            </div>
+            <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--outline-variant)' }} />
+            <span style={{ color: 'var(--primary)', fontWeight: 'bold' }}>R {roundNumber}/{totalRounds}</span>
+            <div style={{ width: '1px', height: '20px', backgroundColor: 'var(--outline-variant)' }} />
+            <span style={{ color: 'var(--on-surface-variant)', fontSize: '0.9rem' }}>Bids: <strong style={{ color: 'var(--on-surface)' }}>{totalBids}</strong></span>
+          </div>
+        </div>
+      </section>
+
+      {/* Players Bids Status */}
+      <section className="bidding-players-container">
         {players.map(p => {
           const isMe = p.seat === mySeat;
-          const isThisDealer = p.seat === dealerSeat;
           const isBiddingNow = p.seat === currentBidderSeat;
           const bid = bidsSoFar[p.seat];
 
           return (
-            <div key={p.seat} style={{ 
-              flex: '0 0 auto',
-              width: '150px',
-              backgroundColor: isMe ? 'rgba(255,184,0,0.1)' : 'var(--surface-container)', 
-              border: isMe ? '2px solid var(--primary-container)' : '1px solid var(--outline-variant)',
-              borderRadius: '16px',
-              padding: '16px',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              position: 'relative'
-            }}>
+            <div 
+              key={p.seat} 
+              className={`bidding-player-card${isMe ? ' is-me' : ''}${isBiddingNow ? ' active' : ''}`}
+            >
               {isBiddingNow && (
-                <div style={{ position: 'absolute', top: 0, right: 0, padding: '4px 8px', backgroundColor: 'var(--primary-container)', color: 'var(--on-primary-container)', fontSize: '0.7rem', fontWeight: 'bold', borderBottomLeftRadius: '8px' }}>
+                <div className="bidding-player-active-label">
                   BIDDING
                 </div>
               )}
-              <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'var(--surface-variant)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '8px' }}>
+              <div className="bidding-player-avatar">
                 {p.name.charAt(0).toUpperCase()}
               </div>
-              <p style={{ fontWeight: 'bold', marginBottom: '8px', textAlign: 'center' }}>{p.name} {isMe ? '(You)' : ''}</p>
+              <span className="bidding-player-name">
+                {p.name} {isMe ? '(You)' : ''}
+              </span>
               
               {bid !== undefined ? (
-                <div style={{ backgroundColor: 'var(--surface-variant)', padding: '4px 16px', borderRadius: '999px', color: 'var(--primary)', fontWeight: 'bold' }}>
+                <span className="bidding-player-badge">
                   {bid}
-                </div>
+                </span>
               ) : (
-                <div style={{ fontSize: '0.8rem', color: 'var(--on-surface-variant)' }}>
-                  Awaiting...
-                </div>
+                <span className="bidding-player-status">
+                  {isBiddingNow ? 'Bidding...' : 'Awaiting...'}
+                </span>
               )}
             </div>
           );
@@ -135,15 +152,15 @@ export const BiddingView: React.FC<BiddingViewProps> = ({
       </section>
 
       {/* Bidding Controls */}
-      <section style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px', marginTop: '24px' }}>
+      <section style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', marginTop: '8px' }}>
         <div style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '1.5rem', color: 'var(--primary)', marginBottom: '8px' }}>
+          <h2 style={{ fontSize: '1.3rem', color: 'var(--primary)', marginBottom: '4px' }}>
             {isMyTurn ? 'Your Turn to Bid' : 'Waiting for others to bid...'}
           </h2>
-          <p style={{ color: 'var(--on-surface-variant)' }}>How many hands will you win this round?</p>
+          <p style={{ color: 'var(--on-surface-variant)', fontSize: '0.9rem', margin: 0 }}>How many hands will you win this round?</p>
         </div>
 
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '600px' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '600px' }}>
           {bidOptions.map(option => {
             const isForbidden = isMyTurn && isDealer && forbiddenBidIfDealer === option;
             const isSelected = selectedBid === option;
@@ -153,17 +170,8 @@ export const BiddingView: React.FC<BiddingViewProps> = ({
                 <button
                   disabled={!isMyTurn || isForbidden}
                   onClick={() => setSelectedBid(option)}
+                  className={`bid-button${isSelected ? ' selected' : ''}${isForbidden ? ' forbidden' : ''}`}
                   style={{
-                    width: '60px',
-                    height: '60px',
-                    borderRadius: '12px',
-                    border: isSelected ? '2px solid var(--primary)' : (isForbidden ? '2px solid rgba(255,180,171,0.3)' : '2px solid var(--outline-variant)'),
-                    backgroundColor: isSelected ? 'var(--primary)' : (isForbidden ? 'rgba(147,0,10,0.2)' : 'transparent'),
-                    color: isSelected ? 'var(--on-primary)' : (isForbidden ? 'rgba(255,180,171,0.3)' : 'var(--on-surface)'),
-                    fontSize: '1.5rem',
-                    fontFamily: 'var(--font-suit-display)',
-                    cursor: (!isMyTurn || isForbidden) ? 'not-allowed' : 'pointer',
-                    transition: 'all 0.2s',
                     opacity: (!isMyTurn) ? 0.5 : 1,
                   }}
                 >

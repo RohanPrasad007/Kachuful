@@ -245,7 +245,7 @@ export class GameEngine {
       } else {
         this.roundScores[seat] = 0;
       }
-      this.scores[seat]! += this.roundScores[seat]!;
+      this.scores[seat] = (this.scores[seat] || 0) + this.roundScores[seat]!;
     }
   }
 
